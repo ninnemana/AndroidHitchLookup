@@ -16,13 +16,20 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import android.app.ListActivity;
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
 public class MakeActivity extends ListActivity {
 	
 	HttpClient client;
+	String year = "";
 	final static String api_url = "http://docs.curthitch.biz/API/";
 	
 	/** Called when the activity is first created. */
@@ -35,12 +42,27 @@ public class MakeActivity extends ListActivity {
         
         Bundle extras = getIntent().getExtras();
         if(extras != null){
-        	String year = extras.getString("year");
-        	String selected_year = year;
+        	year = extras.getString("year");
         	ArrayList<String> makes = new ArrayList<String>();
         	try {
 				makes = GetMakes(year);
 				setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, makes));
+				
+				final ListView make_list = getListView();
+				make_list.setTextFilterEnabled(true);
+				
+				make_list.setOnItemClickListener(new OnItemClickListener() {
+					public void onItemClick(AdapterView<?> a, View v, int position, long id) {
+						Intent model_intent = new Intent(MakeActivity.this,ModelActivity.class);
+						model_intent.putExtra("make", make_list.getItemAtPosition(position).toString());
+						model_intent.putExtra("year", year);
+						try{
+							startActivity(model_intent);
+						}catch(ActivityNotFoundException e){
+							e.printStackTrace();
+						}
+					}
+				});
 				
 			} catch (ClientProtocolException e) {
 				// TODO Auto-generated catch block

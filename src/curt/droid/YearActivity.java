@@ -48,7 +48,6 @@ public class YearActivity extends ListActivity {
 			year_listing.setTextFilterEnabled(true);
 			
 			year_listing.setOnItemClickListener(new OnItemClickListener() {
-				@Override
 				public void onItemClick(AdapterView<?> a, View v, int position, long id) {
 					Intent make_intent = new Intent(YearActivity.this,MakeActivity.class);
 					make_intent.putExtra("year", year_listing.getItemAtPosition(position).toString());
